@@ -38,7 +38,7 @@ const ImageMeta = () => {
           capture="environment"
           onChange={handleChange}
         />
-        <label for="file">Choose a file</label>
+        <label htmlFor="file">Choose a file</label>
       </div>
 
       <br />
@@ -51,7 +51,11 @@ const ImageMeta = () => {
       ) : null}
       {raw ? (
         <div>
-          <pre style={{ width: "100%" }}>{JSON.stringify(data, null, 2)}</pre>
+          <pre
+            style={{ width: "100%", maxHeight: "500px", overflow: "scroll" }}
+          >
+            {JSON.stringify(data, null, 2)}
+          </pre>
           <button className="toggleRaw" onClick={() => setRaw(false)}>
             Hide raw data
           </button>

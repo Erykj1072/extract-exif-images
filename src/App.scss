@@ -49,6 +49,7 @@
   border: 0;
   display: block;
   position: relative;
+  margin-top: 10px;
   width: 140px;
   height: 30px;
   border-radius: 25px;
@@ -61,4 +62,15 @@
   font-weight: bold;
   cursor: pointer;
   transition: transform 0.2s ease-out;
+
+  &:hover {
+    background: linear-gradient(40deg, #4c46ff, #6eb9ff);
+  }
+}
+
+.active {
+}
+
+.inactive {
+  display: none;
 }
