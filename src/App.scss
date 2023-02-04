@@ -1,0 +1,64 @@
+.container {
+  width: 100%;
+  height: 100vh;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+
+.timestamp {
+  display: flex;
+  flex-direction: column;
+
+  &__output {
+    margin-bottom: 20px;
+  }
+}
+.inputfile {
+  width: 0.1px;
+  height: 0.1px;
+  opacity: 0;
+  overflow: hidden;
+  position: absolute;
+  z-index: -1;
+}
+
+.inputfile + label {
+  display: block;
+  position: relative;
+  width: 200px;
+  height: 50px;
+  border-radius: 25px;
+  background: linear-gradient(40deg, #6eb9ff, #4c46ff);
+  box-shadow: 0 4px 7px rgba(0, 0, 0, 0.4);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #fff;
+  font-weight: bold;
+  cursor: pointer;
+  transition: transform 0.2s ease-out;
+
+  &:hover {
+    background: linear-gradient(40deg, #4c46ff, #6eb9ff);
+  }
+}
+
+.toggleRaw {
+  border: 0;
+  display: block;
+  position: relative;
+  width: 140px;
+  height: 30px;
+  border-radius: 25px;
+  background: linear-gradient(40deg, #6eb9ff, #4c46ff);
+  box-shadow: 0 4px 7px rgba(0, 0, 0, 0.4);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #fff;
+  font-weight: bold;
+  cursor: pointer;
+  transition: transform 0.2s ease-out;
+}

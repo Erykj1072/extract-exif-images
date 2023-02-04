@@ -1,25 +1,70 @@
-import logo from './logo.svg';
-import './App.css';
+import React, { useState } from "react";
+import EXIF from "exif-js";
+import "./App.scss";
 
-function App() {
+const ImageMeta = () => {
+  const [data, setData] = useState("");
+  const [raw, setRaw] = useState(false);
+  async function handleChange({
+    target: {
+      files: [file],
+    },
+  }) {
+    if (file && file.name) {
+      const exifData = await new Promise((resolve) => {
+        EXIF.getData(file, function () {
+          resolve(EXIF.getAllTags(file));
+        });
+      });
+
+      setData(exifData);
+    }
+  }
+
+  // function toggleRaw() {
+  //   if (toggleRaw === false){
+  //     setRaw
+  //   }
+  // }
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+    <div className="container">
+      <div className="file">
+        <input
+          type="file"
+          name="file"
+          id="file"
+          className="inputfile"
+          accept="image/*"
+          capture="environment"
+          onChange={handleChange}
+        />
+        <label for="file">Choose a file</label>
+      </div>
+
+      <br />
+
+      {data.DateTime ? (
+        <div className="timestamp">
+          <p className="timestamp__label">Timestamp</p>
+          <span className="timestamp__output">{data.DateTime}</span>
+        </div>
+      ) : null}
+      {raw ? (
+        <div>
+          <pre style={{ width: "100%" }}>{JSON.stringify(data, null, 2)}</pre>
+          <button className="toggleRaw" onClick={() => setRaw(false)}>
+            Hide raw data
+          </button>
+        </div>
+      ) : (
+        <div>
+          <button className="toggleRaw" onClick={() => setRaw(true)}>
+            Show raw data
+          </button>
+        </div>
+      )}
     </div>
   );
-}
+};
 
-export default App;
+export default ImageMeta;
