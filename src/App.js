@@ -5,6 +5,8 @@ import "./App.scss";
 const ImageMeta = () => {
   const [data, setData] = useState("");
   const [raw, setRaw] = useState(false);
+  const [showRawButton, setShowRawButton] = useState(false);
+  const [showError, setShowError] = useState(false);
   async function handleChange({
     target: {
       files: [file],
@@ -18,16 +20,23 @@ const ImageMeta = () => {
       });
 
       setData(exifData);
+      if (Object.keys(exifData).length === 0) {
+        console.log("This does not contain metadata");
+        setShowError(true);
+        setShowRawButton(false);
+        setRaw(false);
+      } else {
+        setShowRawButton(true);
+        setShowError(false);
+      }
     }
+
+    console.log(data);
   }
 
-  // function toggleRaw() {
-  //   if (toggleRaw === false){
-  //     setRaw
-  //   }
-  // }
   return (
     <div className="container">
+      <h1 className="title">Exif.Meta</h1>
       <div className="file">
         <input
           type="file"
@@ -40,7 +49,7 @@ const ImageMeta = () => {
         />
         <label htmlFor="file">Choose a file</label>
       </div>
-
+      <span className={`error ${showError ? "" : "hide"}`}>No metadata</span>
       <br />
 
       {data.DateTime ? (
@@ -53,16 +62,23 @@ const ImageMeta = () => {
         <div>
           <pre
             style={{ width: "100%", maxHeight: "500px", overflow: "scroll" }}
+            className={` ${showRawButton ? "" : "hide"}`}
           >
             {JSON.stringify(data, null, 2)}
           </pre>
-          <button className="toggleRaw" onClick={() => setRaw(false)}>
+          <button
+            className={` ${showRawButton ? "toggleraw" : "hide"}`}
+            onClick={() => setRaw(false)}
+          >
             Hide raw data
           </button>
         </div>
       ) : (
         <div>
-          <button className="toggleRaw" onClick={() => setRaw(true)}>
+          <button
+            className={` ${showRawButton ? "toggleraw" : "hide"}`}
+            onClick={() => setRaw(true)}
+          >
             Show raw data
           </button>
         </div>
