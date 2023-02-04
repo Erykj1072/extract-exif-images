@@ -36,7 +36,7 @@ const ImageMeta = () => {
 
   return (
     <div className="container">
-      <h1 className="title">Exif.Meta</h1>
+      <h1 className="title">Exif.Data</h1>
       <div className="file">
         <input
           type="file"
@@ -49,7 +49,7 @@ const ImageMeta = () => {
         />
         <label htmlFor="file">Choose a file</label>
       </div>
-      <span className={`error ${showError ? "" : "hide"}`}>No metadata</span>
+      <span className={`error ${showError ? "" : "hide"}`}>No exif data</span>
       <br />
 
       {data.DateTime ? (
