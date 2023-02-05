@@ -20,7 +20,7 @@ const ImageMeta = () => {
         });
       });
       setData(exifData);
-      setFileName(file.path);
+      setFileName(file.name);
       if (Object.keys(exifData).length === 0) {
         setShowError(true);
         setShowRawButton(false);
