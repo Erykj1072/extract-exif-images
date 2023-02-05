@@ -7,6 +7,7 @@ const ImageMeta = () => {
   const [raw, setRaw] = useState(false);
   const [showRawButton, setShowRawButton] = useState(false);
   const [showError, setShowError] = useState(false);
+  const [fileName, setFileName] = useState();
   async function handleChange({
     target: {
       files: [file],
@@ -18,8 +19,9 @@ const ImageMeta = () => {
           resolve(EXIF.getAllTags(file));
         });
       });
-
+      console.log(file);
       setData(exifData);
+      setFileName(file.name);
       if (Object.keys(exifData).length === 0) {
         console.log("This does not contain metadata");
         setShowError(true);
@@ -49,6 +51,7 @@ const ImageMeta = () => {
         />
         <label htmlFor="file">Choose a file</label>
       </div>
+      <span className="filename">{fileName}</span>
       <span className={`error ${showError ? "" : "hide"}`}>No exif data</span>
       <br />
 
@@ -61,7 +64,13 @@ const ImageMeta = () => {
       {raw ? (
         <div>
           <pre
-            style={{ width: "100%", maxHeight: "500px", overflow: "scroll" }}
+            style={{
+              width: "100%",
+              maxHeight: "500px",
+              overflow: "scroll",
+              maxWidth: "100%",
+              overflowX: "hidden",
+            }}
             className={` ${showRawButton ? "" : "hide"}`}
           >
             {JSON.stringify(data, null, 2)}
