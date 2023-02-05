@@ -19,11 +19,9 @@ const ImageMeta = () => {
           resolve(EXIF.getAllTags(file));
         });
       });
-      console.log(file);
       setData(exifData);
-      setFileName(file.name);
+      setFileName(file.path);
       if (Object.keys(exifData).length === 0) {
-        console.log("This does not contain metadata");
         setShowError(true);
         setShowRawButton(false);
         setRaw(false);
@@ -32,8 +30,6 @@ const ImageMeta = () => {
         setShowError(false);
       }
     }
-
-    console.log(data);
   }
 
   return (
