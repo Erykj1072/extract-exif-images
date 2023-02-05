@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import EXIF from "exif-js";
 import "./App.scss";
+import CopyToClipboard from "react-copy-to-clipboard";
 
 const ImageMeta = () => {
   const [data, setData] = useState("");
@@ -77,6 +78,9 @@ const ImageMeta = () => {
           >
             Hide raw data
           </button>
+          <CopyToClipboard text={JSON.stringify(data, null, 2)}>
+            <button className="copy">Copy</button>
+          </CopyToClipboard>
         </div>
       ) : (
         <div>
