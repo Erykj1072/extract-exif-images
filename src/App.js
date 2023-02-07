@@ -2,13 +2,22 @@ import React, { useState } from "react";
 import EXIF from "exif-js";
 import "./App.scss";
 import CopyToClipboard from "react-copy-to-clipboard";
+import ReactTimeAgo from "react-time-ago";
 
 const ImageMeta = () => {
   const [data, setData] = useState("");
-  const [raw, setRaw] = useState(false);
-  const [showRawButton, setShowRawButton] = useState(false);
-  const [showError, setShowError] = useState(false);
   const [fileName, setFileName] = useState();
+
+  const [rawData, displayRawData] = useState(false);
+  const [rawToggle, displayRawToggle] = useState(false);
+  const [error, displayError] = useState(false);
+
+  function formatDate(date) {
+    const dateTime = date.split(" ", 2);
+    const formatedDate = dateTime[0].replaceAll(":", "-") + "T" + dateTime[1];
+    return formatedDate;
+  }
+
   async function handleChange({
     target: {
       files: [file],
@@ -23,12 +32,12 @@ const ImageMeta = () => {
       setData(exifData);
       setFileName(file.name);
       if (Object.keys(exifData).length === 0) {
-        setShowError(true);
-        setShowRawButton(false);
-        setRaw(false);
+        displayRawToggle(false);
+        displayError(true);
+        displayRawData(false);
       } else {
-        setShowRawButton(true);
-        setShowError(false);
+        displayRawToggle(true);
+        displayError(false);
       }
     }
   }
@@ -49,16 +58,22 @@ const ImageMeta = () => {
         <label htmlFor="file">Choose a file</label>
       </div>
       <span className="filename">{fileName}</span>
-      <span className={`error ${showError ? "" : "hide"}`}>No exif data</span>
+      <span className={`error ${error ? "" : "hide"}`}>No exif data</span>
       <br />
 
       {data.DateTime ? (
         <div className="timestamp">
-          <p className="timestamp__label">Timestamp</p>
-          <span className="timestamp__output">{data.DateTime}</span>
+          <p className="timestamp__readable">
+            Taken{" "}
+            <ReactTimeAgo
+              date={new Date(formatDate(data.DateTime))}
+              locale="en-US"
+            />
+          </p>
+          <p className="timestamp__raw">{data.DateTime}</p>
         </div>
       ) : null}
-      {raw ? (
+      {rawData ? (
         <div>
           <pre
             style={{
@@ -68,13 +83,13 @@ const ImageMeta = () => {
               maxWidth: "100%",
               overflowX: "hidden",
             }}
-            className={` ${showRawButton ? "" : "hide"}`}
+            className={` ${rawToggle ? "" : "hide"}`}
           >
             {JSON.stringify(data, null, 2)}
           </pre>
           <button
-            className={` ${showRawButton ? "toggleraw" : "hide"}`}
-            onClick={() => setRaw(false)}
+            className={` ${rawToggle ? "toggleraw" : "hide"}`}
+            onClick={() => displayRawData(false)}
           >
             Hide raw data
           </button>
@@ -85,8 +100,8 @@ const ImageMeta = () => {
       ) : (
         <div>
           <button
-            className={` ${showRawButton ? "toggleraw" : "hide"}`}
-            onClick={() => setRaw(true)}
+            className={` ${rawToggle ? "toggleraw" : "hide"}`}
+            onClick={() => displayRawData(true)}
           >
             Show raw data
           </button>
