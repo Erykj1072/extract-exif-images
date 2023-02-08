@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import EXIF from "exif-js";
 import "./App.scss";
 import CopyToClipboard from "react-copy-to-clipboard";
@@ -7,11 +7,33 @@ import ReactTimeAgo from "react-time-ago";
 const ImageMeta = () => {
   const [data, setData] = useState("");
   const [fileName, setFileName] = useState();
+  const [selectedFile, setSelectedFile] = useState();
+  const [preview, setPreview] = useState();
 
   const [rawData, displayRawData] = useState(false);
   const [rawToggle, displayRawToggle] = useState(false);
   const [error, displayError] = useState(false);
 
+  useEffect(() => {
+    if (!selectedFile) {
+      setPreview(undefined);
+      return;
+    }
+
+    const objectUrl = URL.createObjectURL(selectedFile);
+    setPreview(objectUrl);
+
+    return () => URL.revokeObjectURL(objectUrl);
+  }, [selectedFile]);
+
+  const onSelectFile = (e) => {
+    if (!e.target.files || e.target.files.length === 0) {
+      setSelectedFile(undefined);
+      return;
+    }
+
+    setSelectedFile(e.target.files[0]);
+  };
   function formatDate(date) {
     const dateTime = date.split(" ", 2);
     const formatedDate = dateTime[0].replaceAll(":", "-") + "T" + dateTime[1];
@@ -45,6 +67,7 @@ const ImageMeta = () => {
   return (
     <div className="container">
       <h1 className="title">Exif.Data</h1>
+
       <div className="file">
         <input
           type="file"
@@ -53,38 +76,33 @@ const ImageMeta = () => {
           className="inputfile"
           accept="image/*"
           capture="environment"
-          onChange={handleChange}
+          onChange={(e) => {
+            handleChange(e);
+            onSelectFile(e);
+          }}
         />
         <label htmlFor="file">Choose a file</label>
       </div>
+      {selectedFile && <img src={preview} alt="preview" className="preview" />}
       <span className="filename">{fileName}</span>
-      <span className={`error ${error ? "" : "hide"}`}>No exif data</span>
+      <span className={`error ${error ? "" : "hide"}`}>No data</span>
       <br />
 
       {data.DateTime && data.DateTime !== "0000:00:00 00:00:00" ? (
         <div className="timestamp">
-          <p className="timestamp__readable">
+          <span className="timestamp__readable">
             Taken{" "}
             <ReactTimeAgo
               date={new Date(formatDate(data.DateTime))}
               locale="en-US"
             />
-          </p>
+          </span>
           <p className="timestamp__raw">{data.DateTime}</p>
         </div>
       ) : null}
       {rawData ? (
         <div>
-          <pre
-            style={{
-              width: "100%",
-              maxHeight: "500px",
-              overflow: "scroll",
-              maxWidth: "100%",
-              overflowX: "hidden",
-            }}
-            className={` ${rawToggle ? "" : "hide"}`}
-          >
+          <pre className={`rawview ${rawToggle ? "" : "hide"}`}>
             {JSON.stringify(data, null, 2)}
           </pre>
           <button
