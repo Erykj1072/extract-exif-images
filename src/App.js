@@ -61,7 +61,7 @@ const ImageMeta = () => {
       <span className={`error ${error ? "" : "hide"}`}>No exif data</span>
       <br />
 
-      {data.DateTime ? (
+      {data.DateTime && data.DateTime !== "0000:00:00 00:00:00" ? (
         <div className="timestamp">
           <p className="timestamp__readable">
             Taken{" "}
